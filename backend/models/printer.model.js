@@ -5,7 +5,7 @@ mongoose.set("debug", true);
 const printerSchema = new Schema({
     printer: {
         type: String,
-        reuquired: true,
+        reuqired: true,
         trim: true
     },
     model: {
@@ -14,27 +14,32 @@ const printerSchema = new Schema({
     },
     printerbrand: {
         type: String,
-        reuquired: true,
+        reuqired: true,
+        trim: true
+    },
+    user:{
+        type: String,
+        required: true,
         trim: true
     },
     rafts: {
         type: String,
-        reuquired: true,
+        reuqired: true,
         trim: true
     },
     supports: {
         type: String,
-        reuquired: true,
+        reuqired: true,
         trim: true
     },
     resolution: {
         type: String,
-        reuquired: true,
+        reuqired: true,
         trim: true
     },
     notes: {
         type: String,
-        reuquired: true,
+        reuqired: true,
         trim: true
     }
 })

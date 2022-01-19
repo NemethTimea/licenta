@@ -17,12 +17,10 @@ const itemSchema = new Schema({
     },
     category: {
         type: String,
-        required: true,
-        enum:['Art','Engineering', 'Animals', 'Buildings&Structures' ]
+        required: true
     },
     owner: {
-        type: String,
-        required: true
+        type: String
     },
     image: {
         data: Buffer,
@@ -43,8 +41,7 @@ const itemSchema = new Schema({
     },
     size: {
         type: String,
-        reuquired: true,
-        enum: ["Small", "Middle", "Big"],
+        reuquired: true
     },
     followingUsers: {
         type: Array

@@ -7,8 +7,10 @@ router.route('/').get((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/add').post((req, res) => {
-    const user = new User({
+router.post('/add', (req, res) => {
+    console.log(req.body);
+
+    const newUser = new User({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         username: req.body.username,
@@ -21,7 +23,7 @@ router.route('/add').post((req, res) => {
         favourites: [] 
     });
 
-    user.save()
+    newUser.save()
         .then(() => res.json('User added!'))
         .catch(err => res.status(400).json('Error: ' + err));
 });

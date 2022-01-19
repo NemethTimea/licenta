@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from "axios";
 
 export default class CreateItem extends Component{
     constructor(props){
@@ -7,7 +8,7 @@ export default class CreateItem extends Component{
         this.onChangeTitle = this.onChangeTitle.bind(this);
         this.onChangeDescription = this.onChangeDescription.bind(this);
         this.onChangeCategory = this.onChangeCategory.bind(this);
-        this.onChangeOwner = this.onChangeOwner.bind(this);
+        this.onChangeImages = this.onChangeImages.bind(this);
         this.onChangeDimensions = this.onChangeDimensions.bind(this);
         this.onChangeColor = this.onChangeColor.bind(this);
         this.onChangeSize = this.onChangeSize.bind(this);
@@ -16,19 +17,12 @@ export default class CreateItem extends Component{
         this.state = {
             title: "",
             description: "",
-            category: [],
-            owner: "",
+            category: "Art",
+            image: null,
             dimensions: "",
             color: "",
-            size: [],
+            size: "Small"
         }
-    }
-
-    componentDidMount(){
-        this.setState({
-            category: ['Art','Engineering', 'Animals', 'Buildings&Structures'],
-            size: ["Small", "Middle", "Big"]
-        })
     }
 
     onChangeTitle(e){
@@ -46,9 +40,9 @@ export default class CreateItem extends Component{
             category: e.target.value
         })
     }
-    onChangeOwner(e){
+    onChangeImages(e){
         this.setState({
-            owner: e.target.value
+            image: e.target.value
         })
     }
     onChangeDimensions(e){
@@ -70,26 +64,47 @@ export default class CreateItem extends Component{
     onSubmit(e){
         e.preventDefault();
 
-        const item = {
-            title: this.state.title,
-            description: this.state.description,
-            category: this.state.category,
-            owner: this.state.owner,
-            dimensions: this.state.dimensions,
-            color: this.state.color,
-            size: this.state.size,
-        }
+        const formData = new FormData();
 
-        console.log(item)
+        formData.append("title", this.state.title);
+        formData.append("description", this.state.description);
+        formData.append("category", this.state.category);
+        formData.append("dimensions", this.state.dimensions);
+        formData.append("color", this.state.color);
+        formData.append("size", this.state.size);
+        formData.append("image", this.state.image);
 
-        window.location = '/';
+        axios.post("http://localhost:5111/items/add", formData)
+            .then(() => {
+                this.setState({
+                    title: "",
+                    description: "",
+                    category: "",
+                    image: null,
+                    dimensions: "",
+                    color: "",
+                    size: ""
+                });
+            })
+            .catch((error) => {
+                if (error.response){
+                    console.log(error.response);
+                }
+                else if(error.request){
+                    console.log(error.request);
+                }
+                else if(error.message){
+                    console.log(error.message);
+                }
+            });
+        // window.location = '/';
     }
 
     render(){
         return (
         <div>
             <h3>Create New Item Log</h3>
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.onSubmit} encType="multipart/form-data" >
               <div className="form-group"> 
                 <label>Title: </label>
                 <input  type="text"
@@ -110,29 +125,16 @@ export default class CreateItem extends Component{
               </div>
               <div className="form-group">
                 <label>Categories: </label>
-                <select ref="userInput"
-                    required
-                    className="form-control"
-                    value={this.state.category}
-                    onChange={this.onChangeCategory}>
-                    {
-                      this.state.category.map(function(category) {
-                        return <option 
-                          key={category}
-                          value={category}>{category}
-                          </option>;
-                      })
-                    }
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Owner: </label>
-                <input 
-                    type="text" 
-                    className="form-control"
-                    value={this.state.owner}
-                    onChange={this.onChangeOwner}
-                    />
+                    <select
+                        required
+                        defaultValue={this.state.category}
+                        onChange={this.onChangeCategory}
+                        className="form-control">
+                            <option value="Art">Art</option>
+                            <option value="Animals">Animals</option>
+                            <option value="Buildings&Structures">Buildings&Structures</option>
+                            <option value="Engineering">Engineering</option>
+                    </select>
               </div>
               <div className="form-group">
                 <label>Dimensions: </label>
@@ -154,21 +156,26 @@ export default class CreateItem extends Component{
               </div>
               <div className="form-group">
                 <label>Size: </label>
-                <select ref="userInput"
+                <select
                     required
                     className="form-control"
-                    value={this.state.size}
+                    defaultValue={this.state.size}
                     onChange={this.onChangeSize}>
-                    {
-                      this.state.size.map(function(size) {
-                        return <option 
-                          key={size}
-                          value={size}>{size}
-                          </option>;
-                      })
-                    }
+                        <option value="Small">Small</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Big">Big</option>
                 </select>
               </div>
+              <div className="form-group">
+                <label>Image: </label><br/>
+                <input type="file"
+                    // multiple
+                    accept=".png, .jpg, .jpeg"
+                    filename="pictureimage"
+                    selected={this.state.image}
+                    onChange={this.onChangeImages}
+                />
+              </div><br/>
               <div className="form-group">
                 <input type="submit" value="Create Item Log" className="btn btn-primary" />
               </div>
