@@ -21,20 +21,20 @@
 }
 
 .person-icon{
-    margin-left: 47%;
-    margin-top: -60px;
+    margin-left: calc(50% - 30px);
+    margin-top: -30px;
 }
 
 .middle-user-side{
     display: grid;
     grid-template-columns: auto auto;
-    margin-left: 30%;
+    margin-left: 28%;
 }
 
 .add-button{
     width: 50%;
-    height: 40%;
-    background-color: .631756;
+    height: 60%;
+    background-color: #631756;
     font-size: 16px;
     color: white;
     text-align: center;

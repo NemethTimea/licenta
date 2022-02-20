@@ -29,6 +29,10 @@ const itemSchema = new Schema({
         name: String,
         imageBase64: String
     },
+    // stlfile: {
+    //     data: Buffer,
+    //     contentType: String
+    // },
     dimensions: {
         type: String,
         required: true,
