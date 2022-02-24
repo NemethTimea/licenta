@@ -5,12 +5,14 @@ import "./css/main_design.css";
 import "./css/product_design.css";
 import "./css/profile_design.css";
 import "./css/create_post_design.css";
+import "./css/explore-design.css";
 import ItemsLists from "./components/item-lists.component";
 import ModelDetails from "./components/model-details.component";
 import Login from "./components/login-user.component";
 import CreatePost from "./components/create-post.component";
 import UserPage from "./components/user-page.component";
 import Explore from "./components/explore-page.component";
+import Register from "./components/register-user.component";
 
 import EditItem from "./components/edit-item.component";
 import CreateItem from "./components/create-item.component";
@@ -27,6 +29,7 @@ function App() {
           <Route path="/createpost" element={ <CreatePost/> } />
           <Route path="/userpage" element={ <UserPage/> } />
           <Route path="/explore" element={ <Explore/> } />
+          <Route path="/register" element={ <Register/> } />
         </Routes>
     </BrowserRouter>
   );

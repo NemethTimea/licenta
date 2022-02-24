@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap';
 
 
 
-export default class ModelDetails extends Component{
+export default class CreatePost extends Component{
     constructor(props){
         super(props);
         console.log("idk");

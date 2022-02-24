@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getBack, getDownload, getPrinter } from "../other/svgFunctions";
+import { getBackWhite, getEmail, getPassword } from "../other/svgFunctions";
 import axios from 'axios';
 import img1 from "../images/butterfly.PNG";
+import { Button } from 'react-bootstrap';
 
 
-export default class ModelDetails extends Component{
+
+export default class Login extends Component{
     constructor(props){
         super(props);
         console.log("idk");
@@ -14,70 +16,47 @@ export default class ModelDetails extends Component{
     render(){
         return (
             <div>
-                <div className="product-all">
-                    <div className="product-description-div"><br/>
-                        <Link className="back" to={{
-                            pathname: "/"
-                        }}>
-                            {getBack()}
-                        </Link>
-                        <div className="description">
-                            <p>PRODUCT NAME</p>
-                            <p>Product Description</p>
-                            <p>ProductdescriptionProductdescription Productdescription ProductdescriptionProductdescription ProductdescriptionProductdescriptionProductdescriptionProductdescription</p>
-                            <br/><p>ADDITIONAL INFORMATION</p><br/>
-                            <div className="product-table">
-                                <div>
-                                    <p><b>Product Number:</b></p>
-                                    <p className="description-table-2row-4row"><b>Dimensions:</b></p>
-                                    <p><b>Color:</b></p>
-                                    <p className="description-table-2row-4row"><b>Size:</b></p>
+                <p className="title-signin"><b>Sign In</b> form</p><br/>
+                <div className="sign-in-div">
+                    <div className="sign-in-form">
+                        <div className="legit-form"><br/>
+                            <p className="hello"><b>Hello!</b></p>
+                            <p className="sign-into">Sign into Your account</p>
+                            <form encType="multipart/form-data" className="form">
+                                <div className="input-style">
+                                    <label>{getEmail()} Email </label><br/>
+                                    <input
+                                        type="text"
+                                        required
+                                        className="form-input-create"/>
                                 </div>
-                                <div className="column-text-font">
-                                    <p>id33455</p>
-                                    <p className="description-table-2row-4row">23 x 34 x 12 in</p>
-                                    <p>Light Brown</p>
-                                    <p className="description-table-2row-4row">Small</p>
-                                </div>
-                            </div>
-                        </div>         
+                                <div className="form-group">
+                                    <label>{getPassword()} Password </label><br/>
+                                    <input
+                                        type="password"
+                                        required
+                                        className="form-input-create"/>
+                                </div><br/><br/>
+                                <Button
+                                    type="submit"
+                                    className="button-signin"
+                                    value="SignIn">Sign In!</Button>
+                            </form> 
+                        </div>
                     </div>
-                    <div className="product-image-div">
-                        <img className="product-image" src={img1}/>
+                    <div className="right-text">
+                        <br/>
+                        <p><b>Welcome Back!</b><br/><br/>If you signed in and have an account, join our creative world!</p>
+                        <Link to={{
+                            pathname: "/",
+                        }}>{getBackWhite()}</Link>
                     </div>
                 </div>
-                <div className="print-settings-div">
-                    <div className="print-settings-descriptions"><br/>
-                        <div className="settings-download-button">
-                            <p>
-                                PRINT SETTINGS
-                                {getPrinter()}
-                            </p>
-                            <button>
-                                {getDownload()}
-                                Download .stl
-                            </button> 
-                        </div>
-                        
-                        <div className="print-settings-align">
-                            <div>
-                                <p><b>Pinter:</b></p>
-                                <p>Qidi X-One</p>
-                                <p><b>Printer brand:</b></p>
-                                <p>X-One</p>
-                                <p><b>Rafts:</b></p>
-                                <p>No</p>
-                            </div>
-                            <div>
-                                <p><b>Supports:</b></p>
-                                <p>No</p>
-                                <p><b>Resolution:</b></p>
-                                <p>0.200</p>
-                                <p><b>Notes:</b></p>
-                                <p>Nothing to say about the model.</p>
-                            </div> 
-                        </div>
-                    </div>
+                <div className="bottom-text">
+                    <p>I don't have an account.</p>
+                    <Link className="link-color" to={{
+                        pathname: "/register",
+                    }}><u>Create one!</u></Link>
                 </div>
             </div>
         )
