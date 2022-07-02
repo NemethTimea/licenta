@@ -31,8 +31,7 @@ const userSchema = new Schema({
         type: String,
         require: true,
         trim: true,
-        minlength: 4,
-        maxlength: 12
+        minlength: 4
     },
     about: {
         type: String,
@@ -43,13 +42,22 @@ const userSchema = new Schema({
         type: Boolean
     },
     follows: {
-        type: Number
+        type: Array
     },
     followers: {
         type: Array
     },
     favourites: {
         type: Array
+    },
+    status: {
+        type: String,
+        enum: ['Deactivated', 'Pending', 'Active'],
+        default: 'Pending'
+    },
+    confirmation_code: {
+        type: String,
+        unique: true
     }
 }, {
     timestamps: true

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./css/login_design.css";
 import "./css/main_design.css";
@@ -14,23 +14,18 @@ import UserPage from "./components/user-page.component";
 import Explore from "./components/explore-page.component";
 import Register from "./components/register-user.component";
 
-import EditItem from "./components/edit-item.component";
-import CreateItem from "./components/create-item.component";
-import CreateUser from "./components/create-user.component";
-import CreatePrinter from "./components/create-printer.component";
-
 function App() {
   return (
     <BrowserRouter>
-        <Routes>
-          <Route path="/" exact element={ <ItemsLists/> } />
-          <Route path="/details" element={ <ModelDetails/> } />
-          <Route path="/login" element={ <Login/> } />
-          <Route path="/createpost" element={ <CreatePost/> } />
-          <Route path="/userpage" element={ <UserPage/> } />
-          <Route path="/explore" element={ <Explore/> } />
-          <Route path="/register" element={ <Register/> } />
-        </Routes>
+      <main>
+          <Route exact path="/" render={ props => <ItemsLists {...props} /> } />
+          <Route path="/userpage" render={ props => <UserPage {...props} /> } />
+          <Route path="/login/:token" render={ props => <Login {...props} /> } />
+          <Route path="/register" component={Register}/>
+          <Route path="/createpost" render={ props => <CreatePost {...props} /> } />
+          <Route path="/details" render={ props => <ModelDetails {...props} /> } />
+          <Route path="/explore" render={ props => <Explore {...props} /> } />
+      </main>
     </BrowserRouter>
   );
 }

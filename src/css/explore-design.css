@@ -1,3 +1,8 @@
+.explore {
+    display: flex;
+    flex-direction: column;
+}
+
 .explore-container{
     display: grid;
     grid-template-columns: 1fr;
@@ -19,21 +24,44 @@
 .filters-container{
     margin-top: 2px;
     box-shadow: 0px 0px 20px #888888;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
 }
 .filters{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    font-size: 18px;
-    margin-left:300px;
-    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
-.filters-second-row{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    font-size: 18px;
-    margin: 30px 0px 0px 460px;
-    width: 50%;
-}
+
 .margin-top{
     margin-top: 160px;
+}
+
+.filter-box {
+    padding: 10px;
+}
+
+.filter-box:hover{
+    color: white;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+    background-color: #888888;
+    box-shadow: 1px 0px 10px #888888;
+    cursor: pointer;
+}
+
+#ExploreForm {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.explore-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.5%;
+    justify-content: flex-start;
+    margin-bottom: 1.5%;
 }

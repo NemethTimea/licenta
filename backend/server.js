@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const path = require("path");
 
 require('dotenv').config();
 
@@ -30,11 +31,10 @@ connection.once("open", () => {
 
 const itemsRouter = require('./routes/items');
 const usersRouter = require('./routes/users');
-const printersRouter = require('./routes/printers');
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use('/items', itemsRouter);
 app.use('/users', usersRouter);
-app.use('/printers', printersRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

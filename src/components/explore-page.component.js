@@ -2,35 +2,136 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getSearch, getLike, getComment, getBackWhite, getExplore} from "../other/svgFunctions";
 import { Button } from 'react-bootstrap';
+import { Post } from "./post.component";
+import { User } from "./user.component";
 import axios from 'axios';
-import img1 from "../images/butterfly.PNG";
-import img2 from "../images/minirobot.PNG";
-import img3 from "../images/building.PNG";
-import img4 from "../images/Christmas.PNG";
-import img5 from "../images/lamp.PNG";
 
 
 export default class Explore extends Component{
     constructor(props){
         super(props);
-        console.log("idk");
+        this.itemList = this.itemList.bind(this);
+        this.state = {
+            visitor: this.props.location.state.visitor,
+            users: [],
+            posts: [],
+            query_type: [],
+            have_printer: false,
+            query_users: false,
+            search: ""
+        }
+    }
+    componentDidMount(){
+        axios.get('http://localhost:5111/items/')
+        .then(response => {this.setState({ posts: response.data })})
+        .catch((error) => {console.log(error);})
+
+        this.onTypeSelect = this.onTypeSelect.bind(this)
+        this.onChangeHavePrinter = this.onChangeHavePrinter.bind(this)
+        this.onChangeFindUsers = this.onChangeFindUsers.bind(this)
+        this.onChangeSearch = this.onChangeSearch.bind(this)
+        this.onSubmitSearch = this.onSubmitSearch.bind(this)
+    }
+    
+    itemList(){
+        return this.state.posts.map(post => {
+            return <Post post={post} user={this.state.visitor} key={post._id}/>;
+        })
+    }
+    
+    userList(){
+        return this.state.users.map(user => {
+            return <User user={user} visitor={this.state.visitor} key={user.username}/>;
+        })
     }
    
+    onTypeSelect(e){
+        var new_query = this.state.query_type
+        if (new_query.includes(e.target.value))
+        {
+            new_query = new_query.filter(element => {
+                return element !== e.target.value
+            })
+        } else {
+            new_query.push(e.target.value)
+        }
+        this.setState({
+            query_type: new_query
+        });
+    }
+
+    onChangeHavePrinter(e){
+        this.setState({
+            have_printer: e.target.checked
+        }, () => {
+            console.log(this.state.have_printer)
+        });
+    }
+    
+    onChangeFindUsers(e){
+        this.setState({
+            query_users: e.target.checked
+        });
+    }
+
+    onChangeSearch(e){
+        e.preventDefault();
+        this.setState({
+            search: e.target.value
+        });
+    }
+
+    onSubmitSearch(e){
+        e.preventDefault()
+        if (this.state.query_users || this.state.have_printer){
+            const filter = {
+                search: this.state.search.trim(),
+                have_printer: this.state.have_printer
+            }
+
+            axios.post("http://localhost:5111/users/filter/", filter)
+            .then(response => {
+                this.setState({
+                    posts: [],
+                    users: response.data
+                }
+            )})
+            .catch((error) => {console.log(error);})
+        } else {
+            const filter = {
+                search: this.state.search.trim(),
+                category: this.state.query_type
+            }
+
+            axios.post("http://localhost:5111/items/filter/", filter)
+            .then(response => {
+                this.setState({
+                    posts: response.data,
+                    users: []
+                }
+            )})
+            .catch((error) => {console.log(error);})
+        }
+    }
+
     render(){
         return (
-            <div>
+            <div className="explore">
                 <div className="explore-container">
                     <Link to={{
-                                pathname: "/",
-                        }}>
+                        pathname: "/",
+                        state:{
+                            user: this.state.visitor
+                        }
+                    }}>
                     <p className="back">{getBackWhite(30, 30, "white")}</p>
                     </Link>
                     <h3 className="align-top">Explore with <b><i>3D Vision</i></b></h3>
                     <p>You can search for any model you want and try the filters below!</p>
                     <p>{getExplore(32,32)}</p>
                     <br/>
-                    <form className="space-between-search" action="">
-                        <input className="search-style" type="text" placeholder="Search..." name="search"/>
+                    <form id='ExploreForm' onSubmit={this.onSubmitSearch}>
+                        <input className="search-style" type="text" placeholder="Search..." name="search" value={this.state.search} onChange={this.onChangeSearch}/>
                         <Button
                             type="submit"
                             value="SignIn">{getSearch()}</Button>
@@ -39,181 +140,48 @@ export default class Explore extends Component{
                 </div>
                 <div className="filters-container"><br/>
                     <div className="filters">
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                Animals
+                        <label htmlFor="Animals">
+                        <div className="form-group filter-box">
+                            Animals <input id="Animals" type="checkbox" value="Animals" form='ExploreForm' checked={this.state.query_type.includes("Animals")} onChange={this.onTypeSelect}/>
                         </div>
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                Art
-                        </div>
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                Engineering
-                        </div>
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                Buildings&Structures
-                        </div>
+                        </label>
+
+                        <label htmlFor="Art">
+                            <div className="form-group filter-box">
+                                Art <input id="Art" type="checkbox" value="Art" form='ExploreForm' checked={this.state.query_type.includes("Art")} onChange={this.onTypeSelect}/>
+                            </div>
+                        </label>
+
+                        <label htmlFor="Engineering">
+                            <div className="form-group  filter-box">
+                                Engineering <input id="Engineering" type="checkbox" value="Engineering" form='ExploreForm' checked={this.state.query_type.includes("Engineering")} onChange={this.onTypeSelect}/>
+                            </div>
+                        </label>
+
+                        <label htmlFor="Structures">
+                            <div className="form-group filter-box">
+                                Buildings&Structures <input id="Structures" type="checkbox" value="Buildings&Structures" form='ExploreForm' checked={this.state.query_type.includes("Buildings&Structures")} onChange={this.onTypeSelect}/>
+                            </div>
+                        </label>
                     </div>
-                    <div className="filters-second-row">
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                have printer
-                        </div>
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                users
-                        </div>
-                        <div className="form-group">
-                            <input
-                                type="checkbox"
-                                required
-                                className="print-align"/>
-                                models
-                        </div>
+                    <div className="filters">
+                        <label htmlFor="UsersWithPrinterCheckbox">
+                            <div className="form-group filter-box">
+                                Users with printer<input id="UsersWithPrinterCheckbox" type="checkbox" form='ExploreForm' checked={this.state.have_printer} onChange={this.onChangeHavePrinter}/>
+                            </div>
+                        </label>
+
+                        <label htmlFor="FindUsersCheckbox">
+                            <div className="form-group filter-box">
+                                Find Users <input id="FindUsersCheckbox" type="checkbox" form='ExploreForm' checked={this.state.query_users} onChange={this.onChangeFindUsers}/>
+                            </div>
+                        </label>
                     </div><br/>
                 </div>
-                <div className="middle_div_enum_products margin-top">
-                    <div>
-                        <div className="user_who_posted">
-                            <p>User - Post title</p>
-                        </div>
-                        <div>
-                            <Link to={{
-                                pathname: "/details"
-                            }}><img className="modelimage" src={img1}/></Link>
-                        </div>
-                        <div className="functionalities">
-                            <div className="like">
-                                {getLike()}
-                                <p>Like</p>
-                            </div>
-                            <div className="comment">
-                                {getComment()}
-                                <p>Comment</p>
-                            </div>
-                        </div>  
-                        <Link to={{
-                            pathname: "/details",
-                            state: {
-                                user: null
-                            }
-                        }}><button className="button_details">Details</button></Link>
-                    </div>
-                    <div>
-                        <div className="user_who_posted">
-                            <p>User - Post title</p>
-                        </div>
-                        <div>
-                            <Link to={{
-                                pathname: "/details"
-                            }}><img className="modelimage" src={img2}/></Link>
-                        </div>
-                        <div className="functionalities">
-                            <div className="like">
-                                {getLike()}
-                                <p>Like</p>
-                            </div>
-                            <div className="comment">
-                                {getComment()}
-                                <p>Comment</p>
-                            </div>
-                        </div>  
-                        <Link to={{
-                            pathname: "/details"
-                        }}><button className="button_details">Details</button></Link>
-                    </div>
-                    <div>
-                        <div className="user_who_posted">
-                            <p>User - Post title</p>
-                        </div>
-                        <div>
-                            <Link to={{
-                                pathname: "/details"
-                            }}><img className="modelimage" src={img3}/></Link>
-                        </div>
-                        <div className="functionalities">
-                            <div className="like">
-                                {getLike()}
-                                <p>Like</p>
-                            </div>
-                            <div className="comment">
-                                {getComment()}
-                                <p>Comment</p>
-                            </div>
-                        </div>  
-                        <Link to={{
-                            pathname: "/details"
-                        }}><button className="button_details">Details</button></Link>
-                    </div>
-                    <div>
-                        <div className="user_who_posted">
-                            <p>User - Post title</p>
-                        </div>
-                        <div>
-                            <Link to={{
-                                pathname: "/details"
-                            }}><img className="modelimage" src={img4}/></Link>
-                        </div>
-                        <div className="functionalities">
-                            <div className="like">
-                                {getLike()}
-                                <p>Like</p>
-                            </div>
-                            <div className="comment">
-                                {getComment()}
-                                <p>Comment</p>
-                            </div>
-                        </div>  
-                        <Link to={{
-                            pathname: "/details"
-                        }}><button className="button_details">Details</button></Link>
-                    </div>
+                <div className="explore-list">
+                    {this.itemList()}
+                    {this.userList()}
                 </div>
-                <div className="middle_div_enum_products">
-                    <div>
-                        <div className="user_who_posted">
-                            <p>User - Post title</p>
-                        </div>
-                        <div>
-                            <Link to={{
-                                pathname: "/details"
-                            }}><img className="modelimage" src={img5}/></Link>
-                        </div>
-                        <div className="functionalities">
-                            <div className="like">
-                                {getLike()}
-                                <p>Like</p>
-                            </div>
-                            <div className="comment">
-                                {getComment()}
-                                <p>Comment</p>
-                            </div>
-                        </div>  
-                        <Link to={{
-                            pathname: "/details"
-                        }}><button className="button_details">Details</button></Link>
-                    </div>
-                </div><br/><br/>
             </div>
         )
     }

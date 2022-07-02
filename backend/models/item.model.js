@@ -22,6 +22,9 @@ const itemSchema = new Schema({
     owner: {
         type: String
     },
+    imagename: {
+        type: String
+    },
     image: {
         data: Buffer,
         contentType: String,
@@ -29,10 +32,15 @@ const itemSchema = new Schema({
         name: String,
         imageBase64: String
     },
-    // stlfile: {
-    //     data: Buffer,
-    //     contentType: String
-    // },
+    stlfilename: {
+        type: String
+    },
+    stlfile: {
+        data: Buffer,
+        contentType: String,
+        size: Number,
+        name: String
+    },
     dimensions: {
         type: String,
         required: true,
@@ -54,7 +62,41 @@ const itemSchema = new Schema({
         type: Array
     },
     likes: {
+        type: Array
+    },
+    nrdownloads: {
         type: Number
+    },
+    // printer settings
+    printer: {
+        type: String,
+        reuqired: true,
+        trim: true
+    },
+    printerbrand: {
+        type: String,
+        reuqired: true,
+        trim: true
+    },
+    rafts: {
+        type: String,
+        reuqired: true,
+        trim: true
+    },
+    supports: {
+        type: String,
+        reuqired: true,
+        trim: true
+    },
+    resolution: {
+        type: String,
+        reuqired: true,
+        trim: true
+    },
+    notes: {
+        type: String,
+        reuqired: true,
+        trim: true
     }
 }, {
     timestamps: true

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from "react-router-dom";
 import { Checkbox } from 'pretty-checkbox-react';
 import axios from "axios";
 
@@ -22,7 +23,8 @@ export default class CreateUser extends Component{
             email: "",
             password: "",
             about: "",
-            printer: false
+            printer: false,
+            registered: false
         }
     }
 
@@ -62,27 +64,21 @@ export default class CreateUser extends Component{
     onSubmit(e){
         e.preventDefault();
 
-        const formData = new FormData();
+        const data = {
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            username: this.state.username,
+            email: this.state.email,
+            password: this.state.password,
+            about: this.state.about,
+            printer: this.state.printer
+        }
 
-        formData.append("firstname", this.state.firstname);
-        formData.append("lastname", this.state.lastname);
-        formData.append("username", this.state.username);
-        formData.append("email", this.state.email);
-        formData.append("password", this.state.password);
-        formData.append("about", this.state.about);
-        formData.append("printer", this.state.printer);
-
-        axios.post("http://localhost:5111/users/add", formData)
-            .then(() => {
+        axios.post("http://localhost:5111/users/add", data)
+            .then(response => {
                 this.setState({
-                    firstname: "",
-                    lastname: "",
-                    username: "",
-                    email: "",
-                    password: "",
-                    about: "",
-                    printer: false
-                });
+                    registered: true
+                })
             })
             .catch((error) => {
                 if (error.response){
@@ -95,14 +91,19 @@ export default class CreateUser extends Component{
                     console.log(error.message);
                 }
             });
-        // window.location = '/';
+        window.location = '/';
     }
 
     render(){
-        return (
+        return this.state.registered ? <Redirect to={{
+            pathname: `/login/idk`,
+            state: {
+                login: "login",
+                user: this.state.user
+            }}}/> : (
             <div>
             <h3>Create New User</h3>
-            <form onSubmit={this.onSubmit} encType="multipart/form-data" >
+            <f tipul acesteia orm onSubmit={this.onSubmit} encType="multipart/form-data" >
               <div className="form-group"> 
                 <label>Firstname: </label>
                 <input type="text"
@@ -167,7 +168,7 @@ export default class CreateUser extends Component{
               <div className="form-group">
                 <input type="submit" value="Create User" className="btn btn-primary" />
               </div>
-            </form>
+            </f>
         </div>
         )
     }

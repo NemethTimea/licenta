@@ -181,3 +181,7 @@ form{
 .print-align{
     margin-right: 20px;
 }
+.please-confirm{
+    color: #d43b6e;
+    text-align: center;
+}
